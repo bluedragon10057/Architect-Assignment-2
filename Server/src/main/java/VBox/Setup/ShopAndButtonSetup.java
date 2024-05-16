@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import Leaderboard.Leaderboard;
 
@@ -21,18 +22,18 @@ public class ShopAndButtonSetup {
     private VBox vbox = new VBox();
     private ShopItemObject[] shopItems = new ShopItemObject[5];
     private Button[] buttons = new Button[5];
-    private Scene scene;
+    private Stage stage;
     private int intTotalCracks;
     private int intCracksPerSec;
     private String finalTime;
-    public ShopAndButtonSetup(Integer integerTotalCracks, Label labelTotalCracks, Integer integerCracksPerSec, Label labelCracksPerSec, ImageView clickKid, Image imageJumping, Image imageStanding, FXTimer timer) {
+    public ShopAndButtonSetup(Integer integerTotalCracks, Label labelTotalCracks, Integer integerCracksPerSec, Label labelCracksPerSec, ImageView clickKid, Image imageJumping, Image imageStanding, FXTimer timer, Stage stage) {
         intTotalCracks = integerTotalCracks;
         intCracksPerSec = integerCracksPerSec;
-        shopItems[0] = new ShopItemObject("Another Kid", 5, 1,"160-x-160-pixels.jpg" );
-        shopItems[1] = new ShopItemObject("Twins :0", 10, 2,"160-x-160-pixels.jpg" );
-        shopItems[2] = new ShopItemObject("TRIPLETS", 50, 3,"160-x-160-pixels.jpg" );
-        shopItems[3] = new ShopItemObject("The Family <3", 100, 5, "160-x-160-pixels.jpg" );
-        shopItems[4] = new ShopItemObject("THE CLASSROOM??", 500, 10,"160-x-160-pixels.jpg" );
+        shopItems[0] = new ShopItemObject("Another Kid", 5, 1,"100x100.jpg" );
+        shopItems[1] = new ShopItemObject("Twins :0", 10, 2,"100x100.jpg" );
+        shopItems[2] = new ShopItemObject("TRIPLETS", 50, 3,"100x100.jpg" );
+        shopItems[3] = new ShopItemObject("The Family <3", 1, 100000, "100x100.jpg" );
+        shopItems[4] = new ShopItemObject("THE CLASSROOM??", 1, 100000,"100x100.jpg" );
 
         for (int i = 0; i < 4; i++) {
             buttons[i] = shopItems[i].getButton();
@@ -61,21 +62,23 @@ public class ShopAndButtonSetup {
         Label timerLabel = timer.getTimerLabel();
 
         Timeline oneSecondsWonder = new Timeline(
-                new KeyFrame(Duration.seconds(1),
+                new KeyFrame(Duration.seconds(0.5),
                         new EventHandler<ActionEvent>() {
 
                             @Override
                             public void handle(ActionEvent event) {
-                                intTotalCracks += intCracksPerSec;
+                                intTotalCracks += intCracksPerSec/2;
                                 labelTotalCracks.setText(intTotalCracks + " backs cracked");
                                 labelCracksPerSec.setText("per second: "+ + intCracksPerSec);
                                 if (intTotalCracks >= 1000000) {
                                     finalTime = timerLabel.getText();
+                                    timer.timeline.stop();
                                     try {
                                         triggerLeaderboard();
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
+
                                 }
                             }
                         } ) );
@@ -85,14 +88,10 @@ public class ShopAndButtonSetup {
 
     public void triggerLeaderboard() throws IOException {
         Leaderboard leaderboard = new Leaderboard(finalTime);
-        scene = leaderboard.getScene();
+        stage.setScene( leaderboard.getScene() );
     }
 
     public VBox getVBox() {
         return vbox;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
     }
 }

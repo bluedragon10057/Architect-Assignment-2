@@ -7,13 +7,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 
 public class Leaderboard {
-    private File file = new File("LeaderboardSaveData.txt");
+    private File file = new File("main/resources/LeaderboardSaveData.txt");
     private Scanner reader = new Scanner(file);
     private PrintWriter writer = new PrintWriter(file);
     private TreeSet<LeaderboardEntry> set = new TreeSet<LeaderboardEntry>();
-    private VBox vbox = new VBox();
-
-    private Scene scene = new Scene(vbox);
+    private VBox vboxAskName = new VBox();
+    private VBox vboxDisplayLeaderBoard = new VBox();
+    private Scene scene = new Scene(vboxAskName);
 
     // Main driver method
     public Leaderboard (String time) throws IOException {
@@ -24,14 +24,22 @@ public class Leaderboard {
         Label askName = new Label("What is your name?");
         TextField enterName = new TextField();
         Button button = new Button("Submit");
+        vboxAskName.getChildren().setAll(askName, enterName, button);
 
-        vbox.getChildren().setAll(askName, enterName, button);
-        button.setOnAction( evt -> labelName.setText( enterName.getText() ) );
+        button.setOnAction( evt -> {
+            labelName.setText( enterName.getText() );
+            scene = new Scene(vboxDisplayLeaderBoard);
+        } );
         stringName = labelName.getText();
 
         writer.println(time);
         writer.println(stringName);
         set.add(new LeaderboardEntry( time, stringName) );
+
+        for (LeaderboardEntry c : set) {
+            Label entry = new Label(c.time + " " + c.name);
+            vboxDisplayLeaderBoard.getChildren().add(entry);
+        }
 
     }
 

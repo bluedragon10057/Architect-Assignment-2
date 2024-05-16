@@ -6,17 +6,19 @@ import VBox.Setup.ShopAndButtonSetup;
 import javafx.scene.Scene;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class MenuController {
 
     private ClickingKidSetup left = new ClickingKidSetup();
-    private BoughtPeopleDisplaySetup middle = new BoughtPeopleDisplaySetup();
-    private ShopAndButtonSetup right = new ShopAndButtonSetup(left.getIntTotalCracks(), left.getLabelTotalCracks(), left.getIntCracksPerSec(), left.getLabelCracksPerSec(), left.getClickKid(), left.getImageJumping(), left.getImageStanding(), left.getTimer() );
+    private BoughtPeopleDisplaySetup middle = new BoughtPeopleDisplaySetup( left.getTimer() );
+    private Stage stage;
+    private ShopAndButtonSetup right = new ShopAndButtonSetup(left.getIntTotalCracks(), left.getLabelTotalCracks(), left.getIntCracksPerSec(), left.getLabelCracksPerSec(), left.getClickKid(), left.getImageJumping(), left.getImageStanding(), left.getTimer(), stage );
     private HBox root = new HBox(left.getVBox(), middle.getVBox(), right.getVBox() );
     private Scene scene = new Scene(root, 1200, 800 );
 
-    public MenuController() {
-        right.setScene(scene);
+    public MenuController(Stage stage) {
+        this.stage = stage;
     }
 
     public Scene getScene() {

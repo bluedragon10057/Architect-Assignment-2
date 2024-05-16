@@ -23,7 +23,7 @@ public class ShopItemObject {
         button.setGraphic(viewImage);
         button.setContentDisplay(ContentDisplay.LEFT);
         button.setText(name + "\n$" + price);
-        button.setStyle("-fx-pref-height: 160; -fx-pref-width: 400");
+        button.setStyle("-fx-pref-height: 160; -fx-pref-width: 400; -fx-padding: 0; -fx-label-padding: 0");
     }
 
     public String getName() {

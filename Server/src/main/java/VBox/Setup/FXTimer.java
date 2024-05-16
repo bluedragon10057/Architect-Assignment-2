@@ -18,16 +18,15 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public class FXTimer extends Application {
+public class FXTimer {
 
-    private Timeline timeline;
+    Timeline timeline;
     private Label timerLabel = new Label();
     private DoubleProperty timeSeconds = new SimpleDoubleProperty();
     private Duration time = Duration.ZERO;
 
     private Button timerButton = new Button();
-    @Override
-    public void start(Stage primaryStage) {
+    public FXTimer() {
         // Configure the Label
         // Bind the timerLabel text property to the timeSeconds property
         timerLabel.textProperty().bind(timeSeconds.asString());
@@ -59,13 +58,6 @@ public class FXTimer extends Application {
             }
         });
 
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
     }
 
     public Label getTimerLabel() {
