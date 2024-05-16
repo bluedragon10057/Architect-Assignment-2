@@ -58,6 +58,7 @@ public class Leaderboard {
         set.add(new LeaderboardEntry(time, name) );
         for (LeaderboardEntry c : set) {
             Label entry = new Label(c.time + " " + c.name);
+            entry.setStyle("-fx-font-size: 50; -fx-font-family: 'Comic Sans MS'");
             vboxDisplayLeaderBoard.getChildren().add(entry);
         }
         sceneLeaderboard.setRoot(vboxDisplayLeaderBoard);
