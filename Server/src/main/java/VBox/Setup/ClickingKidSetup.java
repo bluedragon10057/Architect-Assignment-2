@@ -14,10 +14,11 @@ public class ClickingKidSetup {
     private Image imageStanding = new Image("standingkid.png");
     private Image imageJumping = new Image("jumpingkid.png");
     private ImageView clickKid = new ImageView(imageStanding);
-    private VBox vBox = new VBox(labelTotalCracks, labelCracksPerSec, clickKid);
+    private FXTimer timer = new FXTimer();
+    private VBox vBox = new VBox(labelTotalCracks, labelCracksPerSec, clickKid, timer.getTimerLabel() );
 
     public ClickingKidSetup() {
-        labelTotalCracks.setStyle("-fx-alignment: CENTER; -fx-pref-height: 100;");
+        labelTotalCracks.setStyle("-fx-alignment: CENTER; -fx-pref-height: 50;");
         labelCracksPerSec.setStyle("-fx-alignment: CENTER; -fx-pref-height: 50;");
 
 
@@ -50,5 +51,9 @@ public class ClickingKidSetup {
 
     public Image getImageStanding() {
         return imageStanding;
+    }
+
+    public FXTimer getTimer() {
+        return timer;
     }
 }
