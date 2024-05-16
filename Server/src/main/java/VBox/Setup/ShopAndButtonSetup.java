@@ -10,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import Leaderboard.Leaderboard;
 
@@ -22,11 +21,12 @@ public class ShopAndButtonSetup {
     private VBox vbox = new VBox();
     private ShopItemObject[] shopItems = new ShopItemObject[5];
     private Button[] buttons = new Button[5];
-    private Stage stage;
     private int intTotalCracks;
     private int intCracksPerSec;
     private String finalTime;
-    public ShopAndButtonSetup(Integer integerTotalCracks, Label labelTotalCracks, Integer integerCracksPerSec, Label labelCracksPerSec, ImageView clickKid, Image imageJumping, Image imageStanding, FXTimer timer, Stage stage) {
+    private Scene sceneLeaderboard;
+    private Timeline oneSecondsWonder;
+    public ShopAndButtonSetup(Integer integerTotalCracks, Label labelTotalCracks, Integer integerCracksPerSec, Label labelCracksPerSec, ImageView clickKid, Image imageJumping, Image imageStanding, FXTimer timer) {
         intTotalCracks = integerTotalCracks;
         intCracksPerSec = integerCracksPerSec;
         shopItems[0] = new ShopItemObject("Another Kid", 5, 1,"100x100.jpg" );
@@ -61,20 +61,21 @@ public class ShopAndButtonSetup {
         timerButton.fire();
         Label timerLabel = timer.getTimerLabel();
 
-        Timeline oneSecondsWonder = new Timeline(
-                new KeyFrame(Duration.seconds(0.5),
+        oneSecondsWonder = new Timeline(
+                new KeyFrame(Duration.seconds(1),
                         new EventHandler<ActionEvent>() {
 
                             @Override
                             public void handle(ActionEvent event) {
-                                intTotalCracks += intCracksPerSec/2;
+                                intTotalCracks += intCracksPerSec;
                                 labelTotalCracks.setText(intTotalCracks + " backs cracked");
                                 labelCracksPerSec.setText("per second: "+ + intCracksPerSec);
                                 if (intTotalCracks >= 1000000) {
                                     finalTime = timerLabel.getText();
                                     timer.timeline.stop();
+                                    oneSecondsWonder.stop();
                                     try {
-                                        triggerLeaderboard();
+                                        triggerLeaderboard(sceneLeaderboard);
                                     } catch (IOException e) {
                                         throw new RuntimeException(e);
                                     }
@@ -86,9 +87,12 @@ public class ShopAndButtonSetup {
         oneSecondsWonder.play();
     }
 
-    public void triggerLeaderboard() throws IOException {
-        Leaderboard leaderboard = new Leaderboard(finalTime);
-        stage.setScene( leaderboard.getScene() );
+    public void triggerLeaderboard(Scene sceneLeaderboard) throws IOException {
+        Leaderboard leaderboard = new Leaderboard(finalTime, sceneLeaderboard);
+    }
+
+    public void setSceneLeaderboard(Scene scene) {
+        sceneLeaderboard = scene;
     }
 
     public VBox getVBox() {

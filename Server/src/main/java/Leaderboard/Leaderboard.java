@@ -3,48 +3,40 @@ package Leaderboard;
 import java.util.*;
 import javafx.scene.Scene;
 import java.io.*;
+import java.util.concurrent.atomic.AtomicReference;
+
 import javafx.scene.layout.VBox;
 import javafx.scene.control.*;
 
 public class Leaderboard {
-    private File file = new File("main/resources/LeaderboardSaveData.txt");
+    private File file = new File("C:\\Users\\My Laptop\\IdeaProjects\\Architect-Assignment-2\\Server\\src\\main\\resources\\LeaderboardSaveData.txt");
     private Scanner reader = new Scanner(file);
-    private PrintWriter writer = new PrintWriter(file);
+    private FileWriter writer = new FileWriter(file, true);
     private TreeSet<LeaderboardEntry> set = new TreeSet<LeaderboardEntry>();
     private VBox vboxAskName = new VBox();
     private VBox vboxDisplayLeaderBoard = new VBox();
-    private Scene scene = new Scene(vboxAskName);
+    private TextField enterName = new TextField();
+    private Scene sceneLeaderboard;
+    private String time;
 
     // Main driver method
-    public Leaderboard (String time) throws IOException {
+    public Leaderboard (String time, Scene scene) throws IOException {
+        this.time = time;
+        sceneLeaderboard = scene;
         getEntriesFromFile();
+        Label askName = new Label("Congratulations! You finished in " + time + " seconds. What is your name?");
+        Button buttonSubmit = new Button("Submit");
+        vboxAskName.getChildren().setAll(askName, enterName, buttonSubmit);
+        scene.setRoot(vboxAskName);
 
-        Label labelName = new Label();
-        String stringName = null;
-        Label askName = new Label("What is your name?");
-        TextField enterName = new TextField();
-        Button button = new Button("Submit");
-        vboxAskName.getChildren().setAll(askName, enterName, button);
+        buttonSubmit.setOnMouseClicked( evt -> {
+            try {
+                displayLeaderBoard();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
-        button.setOnAction( evt -> {
-            labelName.setText( enterName.getText() );
-            scene = new Scene(vboxDisplayLeaderBoard);
-        } );
-        stringName = labelName.getText();
-
-        writer.println(time);
-        writer.println(stringName);
-        set.add(new LeaderboardEntry( time, stringName) );
-
-        for (LeaderboardEntry c : set) {
-            Label entry = new Label(c.time + " " + c.name);
-            vboxDisplayLeaderBoard.getChildren().add(entry);
-        }
-
-    }
-
-    public Scene getScene() {
-        return scene;
     }
 
     public void getEntriesFromFile() {
@@ -55,5 +47,19 @@ public class Leaderboard {
             name = reader.nextLine();
             set.add(new LeaderboardEntry(time, name) );
         }
+        reader.close();
+    }
+
+    public void displayLeaderBoard() throws IOException {
+        String name = enterName.getText();
+        writer.write(time + "\n");
+        writer.write(name + "\n");
+        writer.close();
+        set.add(new LeaderboardEntry(time, name) );
+        for (LeaderboardEntry c : set) {
+            Label entry = new Label(c.time + " " + c.name);
+            vboxDisplayLeaderBoard.getChildren().add(entry);
+        }
+        sceneLeaderboard.setRoot(vboxDisplayLeaderBoard);
     }
 }

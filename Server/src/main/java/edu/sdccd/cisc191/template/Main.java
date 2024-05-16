@@ -6,12 +6,13 @@ import javafx.stage.Stage;
 import static javafx.application.Application.launch;
 
 public class Main extends Application {
+    private final MenuController menuController = new MenuController();
+
     public static void main(String[] args) {
         launch();
     }
 
     public void start(Stage stage) {
-        MenuController menuController = new MenuController(stage);
         stage.setTitle("Step on a Crack...");
         stage.setScene( menuController.getScene() );
         stage.show();
